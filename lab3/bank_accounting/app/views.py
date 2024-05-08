@@ -21,8 +21,7 @@ def acc(request, acc_id):
         'name': acc_item.name,
         'description': acc_item.description,
         'client': acc_item.client.uid,
-        'worker': acc_item.worker.uid,
-        'money': acc_item.money
+        'worker': acc_item.worker.uid
     }
     return JsonResponse(response_data, safe=False, json_dumps_params={'ensure_ascii': False})
 
@@ -43,17 +42,16 @@ def create_acc(request):
     try:
         data = json.loads(request.body)
         uid = uuid.uuid4()
-        print(data)
-        acc_item = Account.objects.create(uid=uid, name=data['name'], description=data['description'],
-                                            student=Client.objects.get(uid=data['client']), adviser=Worker.objects.get(uid=data['worker']), money=data['money'])
+        acc_item = Account.objects.create(uid=uid, acc_name=data['name'], acc_discr=data['description'],
+                                            client=Client.objects.get(uid=data['client']), worker=Worker.objects.get(uid=data['worker']), acc_money=data['money'])
 
         response_data = {
             'uid': acc_item.uid,
-            'name': acc_item.name,
-            'description': acc_item.description,
-            'student': acc_item.client.uid,
-            'adviser': acc_item.worker.uid,
-            'money': acc_item.money
+            'name': acc_item.acc_name,
+            'description': acc_item.acc_discr,
+            'client': acc_item.client.uid,
+            'worker': acc_item.worker.uid,
+            'money': acc_item.acc_money
         }
         return JsonResponse(response_data, safe=False, json_dumps_params={'ensure_ascii': False}, status=201)
     except Exception as error:
@@ -85,8 +83,8 @@ def create_client(request):
     try:
         data = json.loads(request.body)
         uid = uuid.uuid4()
-        client_item = Client.objects.create(uid=uid, first_name=data['first_name'], last_name=data['last_name'],
-                                             number=data['number'], passport=data['passport'])
+        client_item = Client.objects.create(uid=uid, cl_first_name=data['first_name'], cl_last_name=data['last_name'],
+                                             cl_number=data['number'], cl_passport=data['passport'])
 
         response_data = {
             'uid': client_item.uid,
@@ -123,14 +121,14 @@ def create_worker(request):
     try:
         data = json.loads(request.body)
         uid = uuid.uuid4()
-        worker_item = Worker.objects.create(uid=uid, first_name=data['first_name'], last_name=data['last_name'],
-                                             position=data['position'])
+        worker_item = Worker.objects.create(uid=uid, wk_first_name=data['first_name'], wk_last_name=data['last_name'],
+                                             wk_position=data['position'])
 
         response_data = {
             'uid': worker_item.uid,
-            'first_name': worker_item.first_name,
-            'last_name': worker_item.last_name,
-            'position': worker_item.position
+            'first_name': worker_item.wk_first_name,
+            'last_name': worker_item.wk_last_name,
+            'position': worker_item.wk_position
         }
         return JsonResponse(response_data, safe=False, json_dumps_params={'ensure_ascii': False}, status=201)
     except Exception as error:
